@@ -1,0 +1,41 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This Ansible role prepares the compute nodes to run the shutdownGuestVMs.py script found in ../scripts and then executes that script. See the documentation in shutdownGuestVMs.py for more information. 
+#This role has several input parameters:
+#   provisioning_slave_dir: this is the directory on the remote node into which the script file is copied. This variable is defined in /etc/ansible/hosts.
+#   provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts.
+---
+- hosts: all
+  become: true
+  vars:
+    script_name: shutdownGuestVMs.py
+  tasks: 
+  - name: copy the VMManager module
+    copy: src={{ provisioning_master_dir }}/scripts/VMManager.py dest={{ provisioning_slave_dir }}/VMManager.py mode=0744
+  - name: copy the startup script
+    copy: src={{ provisioning_master_dir }}/scripts/{{ script_name }} dest={{ provisioning_slave_dir }}/{{ script_name}} mode=0744
+  - name: Run the  script
+    command: "{{ provisioning_slave_dir }}/{{ script_name }}" 
+    become: true
+...

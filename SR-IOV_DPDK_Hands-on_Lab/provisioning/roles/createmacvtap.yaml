@@ -1,0 +1,41 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#The createmacvtap.yaml Ansible play creates macvtap NICs on the compute nodes that the HostVMs use to communicate directly with the cluster 'public' network, or the network that the learners use. Theses macvtap logical NICs are simpler than a linux bridge, and allow the learners to ssh directly to their assigned HostVM directly from the cluster jump server. The libvirt macvtap network is defined in ../files/macvtap.xml; the script to create the interfaces is in ../scripts/create_macvtapif.sh. See the create_macvtapif.sh script for more information.
+#This role has several input parameters:
+#   provisioning_slave_dir: this is the directory on the remote node into which the script file is copied. This variable is defined in /etc/ansible/hosts.
+#   provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts
+---
+- hosts: all
+  vars: 
+    network_file_name: macvtap.xml
+    macvtap_script: create_macvtapif.sh
+  tasks:
+  - name: copy the {{ network_file_name }} file to the target
+    copy: src={{ provisioning_master_dir }}/files/{{ network_file_name }} dest={{ provisioning_slave_dir }}/{{ network_file_name }}
+  - name: copy the {{ macvtap_script }} file to the target and make it executable 
+    copy: src={{ provisioning_master_dir }}/scripts/{{ macvtap_script }} dest={{ provisioning_slave_dir }}/{{ macvtap_script }} mode=0774
+    become: true 
+  - name: Run the {{ macvtap_script }} script
+    command: "{{ provisioning_slave_dir }}/{{ macvtap_script }}" 
+    become: true

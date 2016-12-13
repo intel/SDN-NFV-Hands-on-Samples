@@ -1,0 +1,697 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This ssh_config file contains connection information for each of the HostVMs and the nested Tenant and VNF VMs. It allowed users on the 172.16.140.0/16 subnet to ssh directly to the Host, Tenant and VNF VMs.
+
+
+Host HostVM-00
+        User    user
+        HostName        172.16.140.4
+	
+Host VNF-VM-00
+        User    user
+        ProxyCommand ssh -q HostVM-00 nc -q0 192.168.120.10 22
+	
+Host TenantVM-00
+        User    user
+        ProxyCommand ssh -q HostVM-00 nc -q0 192.168.120.11 22
+
+Host HostVM-01
+        User    user
+        HostName        172.16.140.5
+	
+Host VNF-VM-01
+        User    user
+        ProxyCommand ssh -q HostVM-01 nc -q0 192.168.120.10 22
+	
+Host TenantVM-01
+        User    user
+        ProxyCommand ssh -q HostVM-01 nc -q0 192.168.120.11 22
+
+Host HostVM-02
+        User    user
+        HostName        172.16.140.6
+	
+Host VNF-VM-02
+        User    user
+        ProxyCommand ssh -q HostVM-02 nc -q0 192.168.120.10 22
+	
+Host TenantVM-02
+        User    user
+        ProxyCommand ssh -q HostVM-02 nc -q0 192.168.120.11 22
+
+Host HostVM-03
+        User    user
+        HostName        172.16.140.7
+	
+Host VNF-VM-03
+        User    user
+        ProxyCommand ssh -q HostVM-03 nc -q0 192.168.120.10 22
+	
+Host TenantVM-03
+        User    user
+        ProxyCommand ssh -q HostVM-03 nc -q0 192.168.120.11 22
+
+Host HostVM-04
+        User    user
+        HostName        172.16.140.8
+	
+Host VNF-VM-04
+        User    user
+        ProxyCommand ssh -q HostVM-04 nc -q0 192.168.120.10 22
+	
+Host TenantVM-04
+        User    user
+        ProxyCommand ssh -q HostVM-04 nc -q0 192.168.120.11 22
+
+Host HostVM-05
+        User    user
+        HostName        172.16.140.9
+	
+Host VNF-VM-05
+        User    user
+        ProxyCommand ssh -q HostVM-05 nc -q0 192.168.120.10 22
+	
+Host TenantVM-05
+        User    user
+        ProxyCommand ssh -q HostVM-05 nc -q0 192.168.120.11 22
+
+Host HostVM-06
+        User    user
+        HostName        172.16.140.10
+	
+Host VNF-VM-06
+        User    user
+        ProxyCommand ssh -q HostVM-06 nc -q0 192.168.120.10 22
+	
+Host TenantVM-06
+        User    user
+        ProxyCommand ssh -q HostVM-06 nc -q0 192.168.120.11 22
+
+Host HostVM-07
+        User    user
+        HostName        172.16.140.11
+	
+Host VNF-VM-07
+        User    user
+        ProxyCommand ssh -q HostVM-07 nc -q0 192.168.120.10 22
+	
+Host TenantVM-07
+        User    user
+        ProxyCommand ssh -q HostVM-07 nc -q0 192.168.120.11 22
+
+Host HostVM-08
+        User    user
+        HostName        172.16.140.12
+	
+Host VNF-VM-08
+        User    user
+        ProxyCommand ssh -q HostVM-08 nc -q0 192.168.120.10 22
+	
+Host TenantVM-08
+        User    user
+        ProxyCommand ssh -q HostVM-08 nc -q0 192.168.120.11 22
+
+Host HostVM-09
+        User    user
+        HostName        172.16.140.13
+	
+Host VNF-VM-09
+        User    user
+        ProxyCommand ssh -q HostVM-09 nc -q0 192.168.120.10 22
+	
+Host TenantVM-09
+        User    user
+        ProxyCommand ssh -q HostVM-09 nc -q0 192.168.120.11 22
+
+Host HostVM-10
+        User    user
+        HostName        172.16.140.14
+	
+Host VNF-VM-10
+        User    user
+        ProxyCommand ssh -q HostVM-10 nc -q0 192.168.120.10 22
+	
+Host TenantVM-10
+        User    user
+        ProxyCommand ssh -q HostVM-10 nc -q0 192.168.120.11 22
+
+Host HostVM-11
+        User    user
+        HostName        172.16.140.15
+	
+Host VNF-VM-11
+        User    user
+        ProxyCommand ssh -q HostVM-11 nc -q0 192.168.120.10 22
+	
+Host TenantVM-11
+        User    user
+        ProxyCommand ssh -q HostVM-11 nc -q0 192.168.120.11 22
+
+Host HostVM-12
+        User    user
+        HostName        172.16.140.16
+	
+Host VNF-VM-12
+        User    user
+        ProxyCommand ssh -q HostVM-12 nc -q0 192.168.120.10 22
+	
+Host TenantVM-12
+        User    user
+        ProxyCommand ssh -q HostVM-12 nc -q0 192.168.120.11 22
+
+Host HostVM-13
+        User    user
+        HostName        172.16.140.17
+	
+Host VNF-VM-13
+        User    user
+        ProxyCommand ssh -q HostVM-13 nc -q0 192.168.120.10 22
+	
+Host TenantVM-13
+        User    user
+        ProxyCommand ssh -q HostVM-13 nc -q0 192.168.120.11 22
+
+Host HostVM-14
+        User    user
+        HostName        172.16.140.18
+	
+Host VNF-VM-14
+        User    user
+        ProxyCommand ssh -q HostVM-14 nc -q0 192.168.120.10 22
+	
+Host TenantVM-14
+        User    user
+        ProxyCommand ssh -q HostVM-14 nc -q0 192.168.120.11 22
+
+Host HostVM-15
+        User    user
+        HostName        172.16.140.19
+	
+Host VNF-VM-15
+        User    user
+        ProxyCommand ssh -q HostVM-15 nc -q0 192.168.120.10 22
+	
+Host TenantVM-15
+        User    user
+        ProxyCommand ssh -q HostVM-15 nc -q0 192.168.120.11 22
+
+Host HostVM-16
+        User    user
+        HostName        172.16.140.20
+	
+Host VNF-VM-16
+        User    user
+        ProxyCommand ssh -q HostVM-16 nc -q0 192.168.120.10 22
+	
+Host TenantVM-16
+        User    user
+        ProxyCommand ssh -q HostVM-16 nc -q0 192.168.120.11 22
+
+Host HostVM-17
+        User    user
+        HostName        172.16.140.21
+	
+Host VNF-VM-17
+        User    user
+        ProxyCommand ssh -q HostVM-17 nc -q0 192.168.120.10 22
+	
+Host TenantVM-17
+        User    user
+        ProxyCommand ssh -q HostVM-17 nc -q0 192.168.120.11 22
+
+Host HostVM-18
+        User    user
+        HostName        172.16.140.22
+	
+Host VNF-VM-18
+        User    user
+        ProxyCommand ssh -q HostVM-18 nc -q0 192.168.120.10 22
+	
+Host TenantVM-18
+        User    user
+        ProxyCommand ssh -q HostVM-18 nc -q0 192.168.120.11 22
+
+Host HostVM-19
+        User    user
+        HostName        172.16.140.23
+	
+Host VNF-VM-19
+        User    user
+        ProxyCommand ssh -q HostVM-19 nc -q0 192.168.120.10 22
+	
+Host TenantVM-19
+        User    user
+        ProxyCommand ssh -q HostVM-19 nc -q0 192.168.120.11 22
+
+Host HostVM-20
+        User    user
+        HostName        172.16.140.24
+	
+Host VNF-VM-20
+        User    user
+        ProxyCommand ssh -q HostVM-20 nc -q0 192.168.120.10 22
+	
+Host TenantVM-20
+        User    user
+        ProxyCommand ssh -q HostVM-20 nc -q0 192.168.120.11 22
+
+Host HostVM-21
+        User    user
+        HostName        172.16.140.25
+	
+Host VNF-VM-21
+        User    user
+        ProxyCommand ssh -q HostVM-21 nc -q0 192.168.120.10 22
+	
+Host TenantVM-21
+        User    user
+        ProxyCommand ssh -q HostVM-21 nc -q0 192.168.120.11 22
+
+Host HostVM-22
+        User    user
+        HostName        172.16.140.26
+	
+Host VNF-VM-22
+        User    user
+        ProxyCommand ssh -q HostVM-22 nc -q0 192.168.120.10 22
+	
+Host TenantVM-22
+        User    user
+        ProxyCommand ssh -q HostVM-22 nc -q0 192.168.120.11 22
+
+Host HostVM-23
+        User    user
+        HostName        172.16.140.27
+	
+Host VNF-VM-23
+        User    user
+        ProxyCommand ssh -q HostVM-23 nc -q0 192.168.120.10 22
+	
+Host TenantVM-23
+        User    user
+        ProxyCommand ssh -q HostVM-23 nc -q0 192.168.120.11 22
+
+Host HostVM-24
+        User    user
+        HostName        172.16.140.28
+	
+Host VNF-VM-24
+        User    user
+        ProxyCommand ssh -q HostVM-24 nc -q0 192.168.120.10 22
+	
+Host TenantVM-24
+        User    user
+        ProxyCommand ssh -q HostVM-24 nc -q0 192.168.120.11 22
+
+Host HostVM-25
+        User    user
+        HostName        172.16.140.29
+	
+Host VNF-VM-25
+        User    user
+        ProxyCommand ssh -q HostVM-25 nc -q0 192.168.120.10 22
+	
+Host TenantVM-25
+        User    user
+        ProxyCommand ssh -q HostVM-25 nc -q0 192.168.120.11 22
+
+Host HostVM-26
+        User    user
+        HostName        172.16.140.30
+	
+Host VNF-VM-26
+        User    user
+        ProxyCommand ssh -q HostVM-26 nc -q0 192.168.120.10 22
+	
+Host TenantVM-26
+        User    user
+        ProxyCommand ssh -q HostVM-26 nc -q0 192.168.120.11 22
+
+Host HostVM-27
+        User    user
+        HostName        172.16.140.31
+	
+Host VNF-VM-27
+        User    user
+        ProxyCommand ssh -q HostVM-27 nc -q0 192.168.120.10 22
+	
+Host TenantVM-27
+        User    user
+        ProxyCommand ssh -q HostVM-27 nc -q0 192.168.120.11 22
+
+Host HostVM-28
+        User    user
+        HostName        172.16.140.32
+	
+Host VNF-VM-28
+        User    user
+        ProxyCommand ssh -q HostVM-28 nc -q0 192.168.120.10 22
+	
+Host TenantVM-28
+        User    user
+        ProxyCommand ssh -q HostVM-28 nc -q0 192.168.120.11 22
+
+Host HostVM-29
+        User    user
+        HostName        172.16.140.33
+	
+Host VNF-VM-29
+        User    user
+        ProxyCommand ssh -q HostVM-29 nc -q0 192.168.120.10 22
+	
+Host TenantVM-29
+        User    user
+        ProxyCommand ssh -q HostVM-29 nc -q0 192.168.120.11 22
+
+Host HostVM-30
+        User    user
+        HostName        172.16.140.34
+	
+Host VNF-VM-30
+        User    user
+        ProxyCommand ssh -q HostVM-30 nc -q0 192.168.120.10 22
+	
+Host TenantVM-30
+        User    user
+        ProxyCommand ssh -q HostVM-30 nc -q0 192.168.120.11 22
+
+Host HostVM-31
+        User    user
+        HostName        172.16.140.35
+	
+Host VNF-VM-31
+        User    user
+        ProxyCommand ssh -q HostVM-31 nc -q0 192.168.120.10 22
+	
+Host TenantVM-31
+        User    user
+        ProxyCommand ssh -q HostVM-31 nc -q0 192.168.120.11 22
+
+Host HostVM-32
+        User    user
+        HostName        172.16.140.36
+	
+Host VNF-VM-32
+        User    user
+        ProxyCommand ssh -q HostVM-32 nc -q0 192.168.120.10 22
+	
+Host TenantVM-32
+        User    user
+        ProxyCommand ssh -q HostVM-32 nc -q0 192.168.120.11 22
+
+Host HostVM-33
+        User    user
+        HostName        172.16.140.37
+	
+Host VNF-VM-33
+        User    user
+        ProxyCommand ssh -q HostVM-33 nc -q0 192.168.120.10 22
+	
+Host TenantVM-33
+        User    user
+        ProxyCommand ssh -q HostVM-33 nc -q0 192.168.120.11 22
+
+Host HostVM-34
+        User    user
+        HostName        172.16.140.38
+	
+Host VNF-VM-34
+        User    user
+        ProxyCommand ssh -q HostVM-34 nc -q0 192.168.120.10 22
+	
+Host TenantVM-34
+        User    user
+        ProxyCommand ssh -q HostVM-34 nc -q0 192.168.120.11 22
+
+Host HostVM-35
+        User    user
+        HostName        172.16.140.39
+	
+Host VNF-VM-35
+        User    user
+        ProxyCommand ssh -q HostVM-35 nc -q0 192.168.120.10 22
+	
+Host TenantVM-35
+        User    user
+        ProxyCommand ssh -q HostVM-35 nc -q0 192.168.120.11 22
+
+Host HostVM-36
+        User    user
+        HostName        172.16.140.40
+	
+Host VNF-VM-36
+        User    user
+        ProxyCommand ssh -q HostVM-36 nc -q0 192.168.120.10 22
+	
+Host TenantVM-36
+        User    user
+        ProxyCommand ssh -q HostVM-36 nc -q0 192.168.120.11 22
+
+Host HostVM-37
+        User    user
+        HostName        172.16.140.41
+	
+Host VNF-VM-37
+        User    user
+        ProxyCommand ssh -q HostVM-37 nc -q0 192.168.120.10 22
+	
+Host TenantVM-37
+        User    user
+        ProxyCommand ssh -q HostVM-37 nc -q0 192.168.120.11 22
+
+Host HostVM-38
+        User    user
+        HostName        172.16.140.42
+	
+Host VNF-VM-38
+        User    user
+        ProxyCommand ssh -q HostVM-38 nc -q0 192.168.120.10 22
+	
+Host TenantVM-38
+        User    user
+        ProxyCommand ssh -q HostVM-38 nc -q0 192.168.120.11 22
+
+Host HostVM-39
+        User    user
+        HostName        172.16.140.43
+	
+Host VNF-VM-39
+        User    user
+        ProxyCommand ssh -q HostVM-39 nc -q0 192.168.120.10 22
+	
+Host TenantVM-39
+        User    user
+        ProxyCommand ssh -q HostVM-39 nc -q0 192.168.120.11 22
+
+Host HostVM-40
+        User    user
+        HostName        172.16.140.44
+	
+Host VNF-VM-40
+        User    user
+        ProxyCommand ssh -q HostVM-40 nc -q0 192.168.120.10 22
+	
+Host TenantVM-40
+        User    user
+        ProxyCommand ssh -q HostVM-40 nc -q0 192.168.120.11 22
+
+Host HostVM-41
+        User    user
+        HostName        172.16.140.45
+	
+Host VNF-VM-41
+        User    user
+        ProxyCommand ssh -q HostVM-41 nc -q0 192.168.120.10 22
+	
+Host TenantVM-41
+        User    user
+        ProxyCommand ssh -q HostVM-41 nc -q0 192.168.120.11 22
+
+Host HostVM-42
+        User    user
+        HostName        172.16.140.46
+	
+Host VNF-VM-42
+        User    user
+        ProxyCommand ssh -q HostVM-42 nc -q0 192.168.120.10 22
+	
+Host TenantVM-42
+        User    user
+        ProxyCommand ssh -q HostVM-42 nc -q0 192.168.120.11 22
+
+Host HostVM-43
+        User    user
+        HostName        172.16.140.47
+	
+Host VNF-VM-43
+        User    user
+        ProxyCommand ssh -q HostVM-43 nc -q0 192.168.120.10 22
+	
+Host TenantVM-43
+        User    user
+        ProxyCommand ssh -q HostVM-43 nc -q0 192.168.120.11 22
+
+Host HostVM-44
+        User    user
+        HostName        172.16.140.48
+	
+Host VNF-VM-44
+        User    user
+        ProxyCommand ssh -q HostVM-44 nc -q0 192.168.120.10 22
+	
+Host TenantVM-44
+        User    user
+        ProxyCommand ssh -q HostVM-44 nc -q0 192.168.120.11 22
+
+Host HostVM-45
+        User    user
+        HostName        172.16.140.49
+	
+Host VNF-VM-45
+        User    user
+        ProxyCommand ssh -q HostVM-45 nc -q0 192.168.120.10 22
+	
+Host TenantVM-45
+        User    user
+        ProxyCommand ssh -q HostVM-45 nc -q0 192.168.120.11 22
+
+Host HostVM-46
+        User    user
+        HostName        172.16.140.50
+	
+Host VNF-VM-46
+        User    user
+        ProxyCommand ssh -q HostVM-46 nc -q0 192.168.120.10 22
+	
+Host TenantVM-46
+        User    user
+        ProxyCommand ssh -q HostVM-46 nc -q0 192.168.120.11 22
+
+Host HostVM-47
+        User    user
+        HostName        172.16.140.51
+	
+Host VNF-VM-47
+        User    user
+        ProxyCommand ssh -q HostVM-47 nc -q0 192.168.120.10 22
+	
+Host TenantVM-47
+        User    user
+        ProxyCommand ssh -q HostVM-47 nc -q0 192.168.120.11 22
+
+Host HostVM-48
+        User    user
+        HostName        172.16.140.52
+	
+Host VNF-VM-48
+        User    user
+        ProxyCommand ssh -q HostVM-48 nc -q0 192.168.120.10 22
+	
+Host TenantVM-48
+        User    user
+        ProxyCommand ssh -q HostVM-48 nc -q0 192.168.120.11 22
+
+Host HostVM-49
+        User    user
+        HostName        172.16.140.53
+	
+Host VNF-VM-49
+        User    user
+        ProxyCommand ssh -q HostVM-49 nc -q0 192.168.120.10 22
+	
+Host TenantVM-49
+        User    user
+        ProxyCommand ssh -q HostVM-49 nc -q0 192.168.120.11 22
+
+Host HostVM-50
+        User    user
+        HostName        172.16.140.54
+	
+Host VNF-VM-50
+        User    user
+        ProxyCommand ssh -q HostVM-50 nc -q0 192.168.120.10 22
+	
+Host TenantVM-50
+        User    user
+        ProxyCommand ssh -q HostVM-50 nc -q0 192.168.120.11 22
+
+Host HostVM-51
+        User    user
+        HostName        172.16.140.55
+	
+Host VNF-VM-51
+        User    user
+        ProxyCommand ssh -q HostVM-51 nc -q0 192.168.120.10 22
+	
+Host TenantVM-51
+        User    user
+        ProxyCommand ssh -q HostVM-51 nc -q0 192.168.120.11 22
+
+Host HostVM-52
+        User    user
+        HostName        172.16.140.56
+	
+Host VNF-VM-52
+        User    user
+        ProxyCommand ssh -q HostVM-52 nc -q0 192.168.120.10 22
+	
+Host TenantVM-52
+        User    user
+        ProxyCommand ssh -q HostVM-52 nc -q0 192.168.120.11 22
+
+Host HostVM-53
+        User    user
+        HostName        172.16.140.57
+	
+Host VNF-VM-53
+        User    user
+        ProxyCommand ssh -q HostVM-53 nc -q0 192.168.120.10 22
+	
+Host TenantVM-53
+        User    user
+        ProxyCommand ssh -q HostVM-53 nc -q0 192.168.120.11 22
+
+Host HostVM-54
+        User    user
+        HostName        172.16.140.58
+	
+Host VNF-VM-54
+        User    user
+        ProxyCommand ssh -q HostVM-54 nc -q0 192.168.120.10 22
+	
+Host TenantVM-54
+        User    user
+        ProxyCommand ssh -q HostVM-54 nc -q0 192.168.120.11 22
+
+Host HostVM-55
+        User    user
+        HostName        172.16.140.59
+	
+Host VNF-VM-55
+        User    user
+        ProxyCommand ssh -q HostVM-55 nc -q0 192.168.120.10 22
+	
+Host TenantVM-55
+        User    user
+        ProxyCommand ssh -q HostVM-55 nc -q0 192.168.120.11 22

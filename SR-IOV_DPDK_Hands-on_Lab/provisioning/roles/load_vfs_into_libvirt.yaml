@@ -1,0 +1,53 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#The load_vs_into_libvirt.yaml play loads the SR-IOV Virtual Functions into libvirt networks. It has four tasks:
+#   1.	Copy the 02_load_vfs_into_libvirt.sh script to the compute node;
+#   2.	Change the owner of the script to root and make it executable;
+#   3.	Copy the SR-IOV libvirt network definition XML files to the compute node; and
+#   4.	Execute the 02_load_vfs_into_libvirt.sh script on the compute node.
+#This play has several input parameters:
+#   provisioning_slave_dir: this is the directory on the remote node into which the script file is copied. This variable is defined in /etc/ansible/hosts.
+#   provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts
+---
+- hosts: all
+  become: true
+  vars: 
+    script_name: 02_load_vfs_into_libvirt.sh
+    sr_iov_network_files: sr-iov-networks
+    network_files_src_dir: "{{ provisioning_master_dir }}/files"
+    script_src_dir: "{{ provisioning_master_dir }}/scripts"
+    dest_dir: "{{ provisioning_slave_dir }}"
+    owner: root
+  tasks: 
+  - name: copy the {{ script_name }} script to the machine
+    copy: src={{ script_src_dir }}/{{ script_name }} dest={{ dest_dir }}/{{ script_name}} 
+  - name: CHange file ownership
+    file: path={{ dest_dir }}/{{ script_name }} mode=0775 owner={{ owner }} group={{ owner }}
+    become: true
+  - name: copy the SR-IOV libvirt network definition files
+    copy: src={{ network_files_src_dir }}/{{ sr_iov_network_files }} dest={{ dest_dir }}/ mode=0664
+  - name: Run the script
+    command: "{{ dest_dir }}/{{ script_name }}" 
+    become: true
+...

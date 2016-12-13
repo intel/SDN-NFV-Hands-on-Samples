@@ -1,0 +1,48 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This Ansible play copies a file to the inventory by 1) removing the existing file from the remote system; 2) copying the file to a temp location on the remote system; 3) moving the file to the right location on the remote system; and 4) changing file ownership. The play has one input parameter:
+# provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts. 
+
+---
+- hosts: all
+  become: true
+  vars: 
+    file_name: sdnnfv-admin
+    tmp_dir: /home/sdnnfv-admin/
+    src_dir: "{{ provisioning_master_dir }}/files"
+    dest_dir: /etc/sudoers.d
+    owner: root
+    mode: 0664
+  tasks: 
+  - name: remove the the existing file
+    file: path={{ dest_dir }}/{{ file_name }} state=absent 
+  - name: copy the file to the machine
+    copy: src={{ src_dir }}/{{ file_name }} dest={{ tmp_dir }}/{{ file_name}} 
+  - name: move the file to the right location
+    command: mv {{ tmp_dir }}/{{ file_name }} {{ dest_dir }}/{{ file_name}} 
+    become: true
+  - name: CHange file ownership
+    file: path={{ dest_dir }}/{{ file_name }} mode={{ mode }} owner={{ owner }} group={{ owner }}
+    become: true
+...

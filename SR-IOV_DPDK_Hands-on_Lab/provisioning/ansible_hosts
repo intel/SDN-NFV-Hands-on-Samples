@@ -1,0 +1,90 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+# This is the default ansible 'hosts' file.
+#
+# It should live in /etc/ansible/hosts
+
+#dcomp01, dcomp02, ... dcomp14
+[compute_nodes]
+dcomp[01:14]
+
+#variables that apply to the compute_nodes
+[compute_nodes:vars]
+provisioning_slave_dir=/home/sdnnfv-admin/provisioning-slave
+provisioning_master_dir=/home/sdnnfv-admin/provisioning-master
+
+#HostVM-00, HostVM-01,...HostVM-55
+[host_vms]
+HostVM-[00:55]
+
+#variables that apply to the HostVMs
+[host_vms:vars]
+provisioning_master_dir=/home/sdnnfv-admin/provisioning-master
+provisioning_slave_dir=/home/user/provisioning-slave
+
+#These are nested inside the HostVMs
+#VNF-VM-00, VNF-VM-01, ... VNF-VM-55
+[vnf_vms]
+VNF-VM-[00:55]
+
+#variables that apply to the VNF-VMs
+[vnf_vms:vars]
+provisioning_master_dir=/home/sdnnfv-admin/provisioning-master
+provisioning_slave_dir=/home/user/provisioning-slave
+
+#These are nested inside the HostVMs
+#TenantVM-00, TenantVM-01, ... TenantVM-55
+[tenant_vms]
+TenantVM-[00:55]
+
+#variables that apply to the TenantVMs
+[tenant_vms:vars]
+provisioning_master_dir=/home/sdnnfv-admin/provisioning-master
+provisioning_slave_dir=/home/user/provisioning-slave
+
+
+#allows us to specify an inventory that targets all VMS that have SR-IOV NICs
+[sr-iov_vms:children]
+sr-iov_loop0_vms
+sr-iov_loop1_vms
+
+#These HostVMs use ports 0 and 1 on the XL710 NIC
+#HostVM-00, HostVM-04, ... HostVM-52
+[sr-iov_loop0_vms]
+HostVM-[00:52:4]
+
+#These HostVMs use ports 2 and 3 on the XL710 NIC
+#HostVM-02, HostVM-06, ... HostVM-54
+[sr-iov_loop1_vms]
+HostVM-[02:54:4]
+
+#The interface names for ports 0 and 1 (PCI Bus 6, Slot 0, Function 0 and 1)
+[sr-iov_loop0_vms:vars]
+source_nic_0=enp6s0f0
+source_nic_1=enp6s0f1
+
+#The interface names for ports 2 and 3 (PCI Bus 6, Slot 0, Function 2 and 3)
+[sr-iov_loop1_vms:vars]
+source_nic_0=enp6s0f2
+source_nic_1=enp6s0f3

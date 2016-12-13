@@ -1,0 +1,48 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This Ansible play cleans out the default libvirt image store location (/var/lib/libvirt/images), by deleting the directory and re-creating it. The play spares only the master VM image by first moving it to a temporary directory and then putting it back. Pre-conditions: this play assumes that all VMs are shutdown and have been undefined. 
+---
+- hosts: all
+  become: true
+  vars:
+    tmp_dir: /tmp
+    images_dir: /var/lib/libvirt/images
+    master_vm_image: HostVM-Master.qcow2
+  tasks: 
+  - name: Temp move the Master image
+    command: mv {{ images_dir }}/{{ master_vm_image }} {{ tmp_dir }}/
+    become_user: root
+    become_method: sudo
+  - name: clean out the images directory 
+    file: path={{ images_dir }} state=absent
+    become: true
+  - name: Create the images directory again
+    file: path={{ images_dir }} state=directory
+    become_user: root
+    become_method: sudo
+  - name: Move the Master image back
+    command: mv {{ tmp_dir }}/{{ master_vm_image }} {{ images_dir }}/ 
+    become_user: root
+    become_method: sudo
+...

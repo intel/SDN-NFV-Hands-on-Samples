@@ -1,0 +1,50 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#The generateSSHInfo.yaml Ansible play collected SSH information about the HostVMs and the nested Tenant and VNF VMs--information that was generated during the clone process. Ideally, this would have been run as a playbook together with the cloneImages.yaml play. The play 1) removed any existing ssh_config file on the compute node; 2) copied the generateSSHInfo.sh script to the compute node and made it executable; 3) ran the generateSSHInfo.sh script on the compute node; and 4) gathered the ssh_config file from each compute node back to the Ansible controller. Once the SSH information was gathered, it was collated into a single ssh_config file that was then placed on the training cluster jump server so that all learners could directly ssh from the jump server into the Host, Tenant, and VNF VMs. 
+#This role has several input parameters:
+#   provisioning_slave_dir: this is the directory on the remote node into which the script file is copied. This variable is defined in /etc/ansible/hosts.
+#   provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts.
+---
+- hosts: all
+  become: true
+  vars: 
+    generate_ssh_info_script: generateSSHInfo.sh
+    ssh_config_file: ssh_config
+    ssh_config_master_dir: ssh_config_master
+  handlers:
+  - name: "fetch generated ssh_config file"
+    fetch: src={{ provisioning_slave_dir }}/{{ ssh_config_file }} dest={{ provisioning_master_dir }}/files/{{ ssh_config_master_dir }} fail_on_missing=True
+  tasks: 
+  - name: Delete existing {{ ssh_config_file }} file 
+    file: path={{ provisioning_slave_dir }}/{{ ssh_config_file }} state=absent
+    become_user: root
+    become_method: sudo
+  - name: Copy the {{ generate_ssh_info_script }} script
+    copy: src={{ provisioning_master_dir }}/scripts/{{ generate_ssh_info_script }} dest={{ provisioning_slave_dir }}/{{ generate_ssh_info_script }} mode=0744
+  - name: Run the SSH info generation script
+    command: "{{ provisioning_slave_dir }}/{{ generate_ssh_info_script }}" 
+    become_user: root
+    become_method: sudo
+    notify: "fetch generated ssh_config file"
+...

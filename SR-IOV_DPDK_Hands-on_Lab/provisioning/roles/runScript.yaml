@@ -1,0 +1,42 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This script is a generic script that copies a specified script to remote inventory and then executes it as root. 
+# Input parameters: 
+#   provisioning_slave_dir: this is the directory on the remote node into which the script file is copied. This variable is defined in /etc/ansible/hosts.
+#   provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts
+#   relative_source_path: this is a path relative to provisioning_master_dir in which the script file is located. This variable MUST be defined on the command line when instantiating this Ansible role.
+#   script_name: this is the name of the script that is found at provisioning_master_dir/relative_source_path and which will be copied to provisioning_slave_dir on the remote node and then executed. This variable MUST be defined on the command line when instantiating this Ansible role.
+---
+- hosts: all
+  become: true
+  vars:
+    dest_path: "{{ provisioning_slave_dir }}"
+    source_path: "{{ provisioning_master_dir }}/{{ relative_source_path }}"
+  tasks: 
+  - name: copy the script
+    copy: src={{ source_path }}/{{ script_name }} dest={{ dest_path }}/{{ script_name }} mode=0775
+  - name: Run the script
+    command: "{{ dest_path }}/{{ script_name }}" 
+    become: true
+...

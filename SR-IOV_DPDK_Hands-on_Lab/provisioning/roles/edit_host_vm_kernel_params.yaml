@@ -1,0 +1,45 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This Ansible play modified the deployed HostVM guest machines grub command lines to add support for 9 hugepages of size 1GB, remove CPUs 1-4 from the SMP scheduler algorithms, and set the other parameters for tickless kernel on CPUs 1-4. It then rebooted the HostVM system and waited for their return. Obviously, if the base image already has this in in the boot/grub command line, this play is not necessary.
+--- hosts: all
+  become: true
+  vars: 
+    search_expression: ^GRUB_CMDLINE_LINUX_DEFAULT
+    file_name: /etc/default/grub
+    line: GRUB_CMDLINE_LINUX_DEFAULT="console=ttyS0,38400n8 console=tty0 default_hugepagesz=1GB hugepagesz=1GB hugepages=9 isolcpus=1,2,3,4 nohz_full=1,2,3,4 rcu_nocbs=1,2,3,4"
+  tasks: 
+  - name: Add the Hugepage support parameters to the kernel cmdline
+    lineinfile: dest={{ file_name }} regexp={{ search_expression }} line={{ line }}
+  - name: Rebuild the kernel
+    command: update-grub 
+  - name: Reboot
+    command: shutdown -r now "kernel modified, rebooting"
+    async: 0
+    poll: 0
+    ignore_errors: true
+  - name: Wait for server to come back
+    local_action: wait_for host={{ inventory_hostname }} state=started 
+    sudo: false
+
+...

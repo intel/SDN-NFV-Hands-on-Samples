@@ -1,0 +1,46 @@
+# Copyright (c) 2016 Intel Corporation
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+
+#This Ansible play was used to prepare for the cloneImages.yaml play. It copies the HostVM-Master domain definition XML file and image files to the target inventory. This play has two pre-conditions: 
+#   1. the HostVM-Master.qcow2 image must be located at /var/lib/libvirt/images on the ansible controller node. 
+#   2. the HostVM-Master.xml domain definition file must be located at {{ provisioning_master_dir }}.
+
+# This role has several input parameters:
+#   provisioning_slave_dir: this is the directory on the remote node into which the script file is copied. This variable is defined in /etc/ansible/hosts.
+#   provisioning_master_dir: this is the Ansible root directory on the Ansible controller. This variable is defined in /etc/ansible/hosts.
+---
+- hosts: all
+  become: true
+  vars:
+    src_dir: "{{ provisioning_master_dir }}"
+    dest_dir: "{{ provisioning_slave_dir }}"
+  tasks:
+  - name: copy the xml file to the target
+    become: true
+    copy: src={{ src_dir }}/HostVM-Master.xml dest=/home/sdnnfv-admin/provisioning/HostVM-Master.xml
+  - name: copy the Master file to the target
+    copy: src=/var/lib/libvirt/images/HostVM-Master.qcow2 dest=/var/lib/libvirt/images/HostVM-Master.qcow2
+    become: true
+  - name: change the permissions on the /var/lib/libvirt/images folder
+    file: path=/var/lib/libvirt/images/ mode=0711
+    become: true
