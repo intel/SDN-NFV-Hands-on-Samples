@@ -19,8 +19,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
-
+# Author: Irene Liew <irene dot liew at intel dot com>
 
 #01_start_ovs.sh cleans up any existing Open vSwitch processes and resources, and then launches Open vSwitch with DPDK using one 1 GB HugePage.
 if [ "$(id -u)" != "0" ]; then

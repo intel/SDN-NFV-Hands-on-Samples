@@ -19,8 +19,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
-
+# Author: Irene Liew <irene dot liew at intel dot com>
 
 #This script creates the Open vSwitch bridge br0 and adds 4 DPDK enabled vhost-user ports to the bridge.
 if [ "$(id -u)" != "0" ]; then

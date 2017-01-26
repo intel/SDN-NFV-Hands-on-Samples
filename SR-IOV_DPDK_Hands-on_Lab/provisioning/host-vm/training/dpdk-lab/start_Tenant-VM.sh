@@ -21,8 +21,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
-
+# Author: Irene Liew <irene dot liew at intel dot com>
 
 #This script launches the TenantVM using the Fedora 23 image found at /home/usr/vm-images/Fed23_TenantVM.img. The image is launched with 4G of RAM on 4 1G Hugepages from the HostVM. It has 3 NICs, 2 of which use the DPDK-enabled vhostuser ports from Open vSwitch, and the remaining NIC is attached to a tuntap bridge interface and assigned the static IP address 192.168.120.11 by the OS upon boot.
 

@@ -19,7 +19,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+# Author: Irene Liew <irene dot liew at intel dot com>
 
 #This script kills all Open vSwitch processes and cleans up all databases and shared memory. It then removes all dpdk drivers from the kernel and inserts i40e and ixgbe drivers into the kernel. Finally, it unmounts the 1 GB huge pages at /mnt/huge.
 

@@ -19,7 +19,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
+# Author: Irene Liew <irene dot liew at intel dot com>
 
 #displays the Open vSwitch flows on br0 every 1 second
 watch -n1 /home/user/ovs/utilities/ovs-ofctl dump-flows br0
