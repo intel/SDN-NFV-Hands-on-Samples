@@ -22,9 +22,3 @@ echo "Create bridge br0 and vhost ports"
 ./utilities/ovs-vsctl add-port br0 vhost-user1 -- set Interface vhost-user1 type=dpdkvhostuser
 ./utilities/ovs-vsctl add-port br0 vhost-user2 -- set Interface vhost-user2 type=dpdkvhostuser
 ./utilities/ovs-vsctl add-port br0 vhost-user3 -- set Interface vhost-user3 type=dpdkvhostuser
-
-echo "Show br0 info:"
-./utilities/ovs-vsctl show
-
-echo "Showing vhost-user sockets in /usr/local/var/run/openvswitch"
-ls -la /usr/local/var/run/openvswitch | grep vhost-user
