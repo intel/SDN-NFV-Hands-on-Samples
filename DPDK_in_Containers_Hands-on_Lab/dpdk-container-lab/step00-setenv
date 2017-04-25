@@ -1,12 +1,7 @@
-DPDK_VERSION="~/dpdk-16.11"
-OVS_VERSION="~/openvswitch-2.6.1"
-export RTE_SDK="~/dpdk"
-export OVS_DIR="~/ovs"
-
-if [ "$(id -u)" == "0" ]; then
-        echo "WARNING: it is highly recommended to NOT run this as root. If you insist, you must know what you are doing, so edit this script to remove this error."
-        exit 1
-fi   
+DPDK_VERSION="/home/ubuntu/dpdk-stable-16.11.1"
+OVS_VERSION="/home/ubuntu/openvswitch-2.6.1"
+export RTE_SDK="/home/ubuntu/dpdk"
+export OVS_DIR="/home/ubuntu/ovs"
 
 echo "Checking for DPDK directory"
 if [ ! -e $DPDK_VERSION ]; then
@@ -25,7 +20,7 @@ if [ ! -e $OVS_VERSION ]; then
 	exit 1
 fi
 
-if [ ! -L $OVS_SDK ]; then
+if [ ! -L $OVS_DIR ]; then
 	echo "Creating symbolic link to OVS directory"
 	ln -s $OVS_VERSION $OVS_DIR
 fi
@@ -33,6 +28,6 @@ fi
 export RTE_TARGET="x86_64-native-linuxapp-gcc"
 export DPDK_DIR=$RTE_SDK
 export DPDK_BUILD=$RTE_TARGET
-export TRAINING_DIR="~/training/dpdk-container-lab"
+export TRAINING_DIR="/home/ubuntu/training/dpdk-container-lab"
 alias sudo='sudo -E'
 echo "Done."

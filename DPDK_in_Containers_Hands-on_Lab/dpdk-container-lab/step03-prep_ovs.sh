@@ -35,7 +35,7 @@ mkdir -p /usr/local/etc/openvswitch
 mkdir -p /usr/local/var/run/openvswitch
 
 echo "Mounting the hugepage tlfs"
-mount -t hugetlbfs -o pagesize=1G none /mnt/huge
+mount -t hugetlbfs none /mnt/huge
 
 echo "Show the fs table:"
 mount | grep -i huge

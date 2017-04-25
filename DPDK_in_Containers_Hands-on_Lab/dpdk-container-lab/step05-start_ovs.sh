@@ -31,9 +31,9 @@ if [ "$OVS_DIR" == "" ]; then
 fi
 
 cd $OVS_DIR
-echo "Telling the OVS controller to start OVS with DPDK using 1GB and run the ovswitchd daemon on logical core 1"
+echo "Telling the OVS controller to start OVS with DPDK using 512MB hugepage memory and run the ovswitchd daemon on logical core 1"
 ./utilities/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true \
- other_config:dpdk-lcore-mask=0x2 other_config:dpdk-socket-mem="1024"
+ other_config:dpdk-lcore-mask=0x2 other_config:dpdk-socket-mem="512"
 
 echo "Starting the OVS daemon..."
 ./vswitchd/ovs-vswitchd unix:/usr/local/var/run/openvswitch/db.sock --pidfile --detach

@@ -41,6 +41,9 @@ rm -f /tmp/conf.db
 echo "Unmounting hugepages"
 umount nodev /mnt/huge
 
+echo "Deleting huge page memory files..."
+rm -rf /dev/hugepages/*
+
 echo "Show the fs table's hugepage mounts"
 mount | grep -i huge
 

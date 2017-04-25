@@ -28,4 +28,4 @@ echo "Configuring OVS with DPDK support"
 CFLAGS='-march=native' ./configure --with-dpdk=$DPDK_DIR/$DPDK_BUILD
 
 echo "Building OVS"
-make 
+make -j8
