@@ -20,9 +20,9 @@ fi
 #cd $DPDK_DIR
 #make config O=$DPDK_BUILD T=$DPDK_BUILD
 #cd $DPDK_BUILD
-#make -j
+#make -j8
 
 echo "Building pktgen..."
 export PKTGEN_DIR=/usr/src/pktgen
 cd $PKTGEN_DIR
-make -j
+make -j8

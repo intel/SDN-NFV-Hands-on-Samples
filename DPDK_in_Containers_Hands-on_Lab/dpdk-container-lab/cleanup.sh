@@ -47,6 +47,8 @@ rm -rf /dev/hugepages/*
 echo "Show the fs table's hugepage mounts"
 mount | grep -i huge
 
+echo "De-allocating hugepages"
+echo 0  > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 
 echo "Show free/used hugepage info"
 cat /proc/meminfo | grep -i huge

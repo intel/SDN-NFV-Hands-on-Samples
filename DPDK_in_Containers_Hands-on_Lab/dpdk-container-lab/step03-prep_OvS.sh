@@ -30,6 +30,12 @@ if [ "$OVS_DIR" == "" ]; then
 	exit 1
 fi
 
+echo "Cleaning up any allocated resources"
+./cleanup.sh
+
+echo "Re-allocating hugepages"
+echo 2048  > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
 echo "Creating openvswitch directories"
 mkdir -p /usr/local/etc/openvswitch
 mkdir -p /usr/local/var/run/openvswitch
@@ -43,3 +49,7 @@ mount | grep -i huge
 echo "Inserting the user-space IO driver into the kernel"
 modprobe uio
 insmod $DPDK_DIR/$DPDK_BUILD/kmod/igb_uio.ko
+
+echo "Show free/used hugepage info"
+cat /proc/meminfo | grep -i huge
+

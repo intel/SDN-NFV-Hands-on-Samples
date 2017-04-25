@@ -19,8 +19,8 @@ fi
 #cd $RTE_SDK
 #make config O=$RTE_TARGET T=$RTE_TARGET
 #cd $RTE_TARGET
-#make -j
+#make -j8
 
 echo "Building testpmd..."
 cd $RTE_SDK/app/test-pmd
-make -j
+make -j8

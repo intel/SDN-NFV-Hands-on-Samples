@@ -78,7 +78,6 @@ Vagrant.configure("2") do |config|
 	mv /home/ubuntu/training/dpdk-container-lab/docker-build/testpmd/dpdk-stable-16.11.1 /home/ubuntu/training/dpdk-container-lab/docker-build/testpmd/dpdk
 	chown -R ubuntu:ubuntu /home/ubuntu/training
 	ln -s /usr/bin/automake-1.15 /usr/bin/automake-1.14
-	echo 2048  > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 	mkdir /mnt/huge
 	SHELL
 end
