@@ -1,7 +1,6 @@
 FROM dpdk-containers/testpmd
 COPY ./dpdk-container-lab /root/dpdk-container-lab
 WORKDIR /root/dpdk-container-lab
-COPY ./dpdk /usr/src/dpdk
 COPY ./pktgen /usr/src/pktgen
 ENV http_proxy=http://proxy-us.intel.com:911
 ENV https_proxy=$http_proxy
