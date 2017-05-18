@@ -1,0 +1,199 @@
+/*-
+ *   BSD LICENSE
+ *
+ *   Copyright(c) 2010-2016 Intel Corporation. All rights reserved.
+ *   All rights reserved.
+ *
+ *   Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in
+ *       the documentation and/or other materials provided with the
+ *       distribution.
+ *     * Neither the name of Intel Corporation nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
+ *
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+//	Author: Tan Jianfeng < jianfeng dot tan at intel dot com >
+
+diff --git a/lib/librte_eal/common/eal_common_options.c b/lib/librte_eal/common/eal_common_options.c
+index 6ca8af1..4041361 100644
+--- a/lib/librte_eal/common/eal_common_options.c
++++ b/lib/librte_eal/common/eal_common_options.c
+@@ -95,6 +95,7 @@ eal_long_options[] = {
+ 	{OPT_VFIO_INTR,         1, NULL, OPT_VFIO_INTR_NUM        },
+ 	{OPT_VMWARE_TSC_MAP,    0, NULL, OPT_VMWARE_TSC_MAP_NUM   },
+ 	{OPT_XEN_DOM0,          0, NULL, OPT_XEN_DOM0_NUM         },
++	{OPT_SINGLE_FILE,       0, NULL, OPT_SINGLE_FILE_NUM      },
+ 	{0,                     0, NULL, 0                        }
+ };
+ 
+@@ -914,6 +915,10 @@ eal_parse_common_option(int opt, const char *optarg,
+ 		}
+ 		break;
+ 
++	case OPT_SINGLE_FILE_NUM:
++		conf->single_file = 1;
++		break;
++
+ 	/* don't know what to do, leave this to caller */
+ 	default:
+ 		return 1;
+@@ -980,6 +985,17 @@ eal_check_common_options(struct internal_config *internal_cfg)
+ 		return -1;
+ 	}
+ 
++	if (internal_cfg->single_file && internal_cfg->force_sockets == 1) {
++		RTE_LOG(ERR, EAL, "Option --"OPT_SINGLE_FILE" cannot "
++			"be specified together with --"OPT_SOCKET_MEM"\n");
++		return -1;
++	}
++	if (internal_cfg->single_file && internal_cfg->hugepage_unlink) {
++		RTE_LOG(ERR, EAL, "Option --"OPT_HUGE_UNLINK" cannot "
++			"be specified together with --"OPT_SINGLE_FILE"\n");
++		return -1;
++	}
++
+ 	if (rte_eal_devargs_type_count(RTE_DEVTYPE_WHITELISTED_PCI) != 0 &&
+ 		rte_eal_devargs_type_count(RTE_DEVTYPE_BLACKLISTED_PCI) != 0) {
+ 		RTE_LOG(ERR, EAL, "Options blacklist (-b) and whitelist (-w) "
+@@ -1011,6 +1027,8 @@ eal_common_usage(void)
+ 	       "  -n CHANNELS         Number of memory channels\n"
+ 	       "  -m MB               Memory to allocate (see also --"OPT_SOCKET_MEM")\n"
+ 	       "  -r RANKS            Force number of memory ranks (don't detect)\n"
++	       "  --"OPT_SINGLE_FILE" Create single file for shared memory, and \n"
++	       "                      do not promise physical contiguity of memseg\n"
+ 	       "  -b, --"OPT_PCI_BLACKLIST" Add a PCI device in black list.\n"
+ 	       "                      Prevent EAL from using this PCI device. The argument\n"
+ 	       "                      format is <domain:bus:devid.func>.\n"
+diff --git a/lib/librte_eal/common/eal_internal_cfg.h b/lib/librte_eal/common/eal_internal_cfg.h
+index 5f1367e..e680ce0 100644
+--- a/lib/librte_eal/common/eal_internal_cfg.h
++++ b/lib/librte_eal/common/eal_internal_cfg.h
+@@ -61,6 +61,7 @@ struct hugepage_info {
+  */
+ struct internal_config {
+ 	volatile size_t memory;           /**< amount of asked memory */
++	volatile unsigned single_file;    /**< map all hugepages in single file */
+ 	volatile unsigned force_nchannel; /**< force number of channels */
+ 	volatile unsigned force_nrank;    /**< force number of ranks */
+ 	volatile unsigned no_hugetlbfs;   /**< true to disable hugetlbfs */
+diff --git a/lib/librte_eal/common/eal_options.h b/lib/librte_eal/common/eal_options.h
+index a881c62..e5da14a 100644
+--- a/lib/librte_eal/common/eal_options.h
++++ b/lib/librte_eal/common/eal_options.h
+@@ -83,6 +83,8 @@ enum {
+ 	OPT_VMWARE_TSC_MAP_NUM,
+ #define OPT_XEN_DOM0          "xen-dom0"
+ 	OPT_XEN_DOM0_NUM,
++#define OPT_SINGLE_FILE       "single-file"
++	OPT_SINGLE_FILE_NUM,
+ 	OPT_LONG_MAX_NUM
+ };
+ 
+diff --git a/lib/librte_eal/linuxapp/eal/eal.c b/lib/librte_eal/linuxapp/eal/eal.c
+index 2075282..f8fc5b4 100644
+--- a/lib/librte_eal/linuxapp/eal/eal.c
++++ b/lib/librte_eal/linuxapp/eal/eal.c
+@@ -810,6 +810,8 @@ rte_eal_init(int argc, char **argv)
+ 		rte_panic("Cannot init VFIO\n");
+ #endif
+ 
++	eal_thread_init_master(rte_config.master_lcore);
++
+ 	if (rte_eal_memory_init() < 0)
+ 		rte_panic("Cannot init memory\n");
+ 
+@@ -833,8 +835,6 @@ rte_eal_init(int argc, char **argv)
+ 	if (eal_plugins_init() < 0)
+ 		rte_panic("Cannot init plugins\n");
+ 
+-	eal_thread_init_master(rte_config.master_lcore);
+-
+ 	ret = eal_thread_dump_affinity(cpuset, RTE_CPU_AFFINITY_STR_LEN);
+ 
+ 	RTE_LOG(DEBUG, EAL, "Master lcore %u is ready (tid=%x;cpuset=[%s%s])\n",
+diff --git a/lib/librte_eal/linuxapp/eal/eal_memory.c b/lib/librte_eal/linuxapp/eal/eal_memory.c
+index a956bb2..69a7553 100644
+--- a/lib/librte_eal/linuxapp/eal/eal_memory.c
++++ b/lib/librte_eal/linuxapp/eal/eal_memory.c
+@@ -958,20 +958,53 @@ rte_eal_hugepage_init(void)
+ 	/* get pointer to global configuration */
+ 	mcfg = rte_eal_get_configuration()->mem_config;
+ 
+-	/* hugetlbfs can be disabled */
+-	if (internal_config.no_hugetlbfs) {
+-		addr = mmap(NULL, internal_config.memory, PROT_READ | PROT_WRITE,
+-				MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
++	/* when hugetlbfs is disabled or single-file option is specified */
++	if (internal_config.no_hugetlbfs || internal_config.single_file) {
++		int fd;
++		uint64_t pagesize;
++		unsigned socket_id = rte_socket_id();
++		char filepath[MAX_HUGEPAGE_PATH];
++
++		if (internal_config.no_hugetlbfs) {
++			eal_get_hugefile_path(filepath, sizeof(filepath),
++					"/dev/shm", 0);
++			pagesize = RTE_PGSIZE_4K;
++		} else {
++			struct hugepage_info *hpi;
++
++			hpi = &internal_config.hugepage_info[0];
++			eal_get_hugefile_path(filepath, sizeof(filepath),
++					hpi->hugedir, 0);
++			pagesize = hpi->hugepage_sz;
++		}
++		fd = open(filepath, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
++		if (fd < 0) {
++			RTE_LOG(ERR, EAL, "%s: open %s failed: %s\n",
++					__func__, filepath, strerror(errno));
++			return -1;
++		}
++
++		if (ftruncate(fd, internal_config.memory) < 0) {
++			RTE_LOG(ERR, EAL, "ftuncate %s failed: %s\n",
++					filepath, strerror(errno));
++			return -1;
++		}
++
++		addr = mmap(NULL, internal_config.memory,
++				PROT_READ | PROT_WRITE,
++				MAP_SHARED | MAP_POPULATE, fd, 0);
+ 		if (addr == MAP_FAILED) {
+-			RTE_LOG(ERR, EAL, "%s: mmap() failed: %s\n", __func__,
+-					strerror(errno));
++			RTE_LOG(ERR, EAL, "%s: mmap() failed: %s\n",
++					__func__, strerror(errno));
+ 			return -1;
+ 		}
+ 		mcfg->memseg[0].phys_addr = (phys_addr_t)(uintptr_t)addr;
+ 		mcfg->memseg[0].addr = addr;
+-		mcfg->memseg[0].hugepage_sz = RTE_PGSIZE_4K;
++		mcfg->memseg[0].hugepage_sz = pagesize;
+ 		mcfg->memseg[0].len = internal_config.memory;
+-		mcfg->memseg[0].socket_id = 0;
++		mcfg->memseg[0].socket_id = socket_id;
++
++		close(fd);
+ 		return 0;
+ 	}
+ 
+
