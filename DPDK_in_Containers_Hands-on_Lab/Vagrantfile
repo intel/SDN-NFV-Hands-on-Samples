@@ -66,9 +66,10 @@ Vagrant.configure("2") do |config|
      	apt-get --force-yes -y -qq update -y --force-yes -qq
      	apt-get --assume-yes -qq install build-essential automake docker.io linux-headers-$(uname -a | awk '{print $3}') vim kmod python python-pip libtool
 	pip install -U pip six
-  	curl -sO http://dpdk.org/browse/apps/pktgen-dpdk/snapshot/pktgen-dpdk-pktgen-3.1.1.tar.gz
-	curl -sO http://fast.dpdk.org/rel/dpdk-16.11.1.tar.xz
-	curl -sO http://openvswitch.org/releases/openvswitch-2.6.1.tar.gz
+        cd /home/ubuntu
+	curl -sOL http://dpdk.org/browse/apps/pktgen-dpdk/snapshot/pktgen-dpdk-pktgen-3.1.1.tar.gz
+	curl -sOL http://fast.dpdk.org/rel/dpdk-16.11.1.tar.xz
+	curl -sOL http://openvswitch.org/releases/openvswitch-2.6.1.tar.gz
 	tar xf dpdk-16.11.1.tar.xz
 	tar xzf openvswitch-2.6.1.tar.gz
 	tar xzf pktgen-dpdk-pktgen-3.1.1.tar.gz

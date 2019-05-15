@@ -22,7 +22,7 @@
 # Author: Clayne B. Robison <clayne dot b dot robison at intel dot com>
 
 
-FROM ubuntu
+FROM ubuntu:xenial
 COPY ./dpdk-container-lab /root/dpdk-container-lab
 WORKDIR /root/dpdk-container-lab
 COPY ./dpdk /usr/src/dpdk

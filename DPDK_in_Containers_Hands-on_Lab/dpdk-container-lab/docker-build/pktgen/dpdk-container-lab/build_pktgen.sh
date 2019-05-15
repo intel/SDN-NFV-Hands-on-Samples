@@ -43,4 +43,4 @@ fi
 echo "Building pktgen..."
 export PKTGEN_DIR=/usr/src/pktgen
 cd "$PKTGEN_DIR"
-make -j8
+make
